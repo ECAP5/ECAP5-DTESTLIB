@@ -38,6 +38,9 @@ find_package(Python3 COMPONENTS Interpreter Development)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/ecap5-treq.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/verilator-config.cmake)
+
 add_subdirectory(docs)
 add_subdirectory(tests)
 
