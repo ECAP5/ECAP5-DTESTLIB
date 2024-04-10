@@ -1,2 +1,2 @@
 # ECAP5-DTL
-RTL hardware testing libraries for ECAP5
+RTL testing libraries for ECAP5
