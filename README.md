@@ -1,2 +1,2 @@
-# ECAP5-DTL
+# ECAP5-DTLIB
 RTL testing libraries for ECAP5
