@@ -29,7 +29,6 @@
 
 #include "Vtb_instr_wb_slave.h"
 #include "testbench.h"
-#include "Vtb_instr_wb_slave_ecap5_dproc_pkg.h"
 
 class TB_Instr_wb_slave : public Testbench<Vtb_instr_wb_slave> {
 public:
@@ -49,6 +48,7 @@ public:
 };
 
 enum CondId {
+  COND_wishbone,
   __CondIdEnd
 };
 
@@ -67,7 +67,6 @@ void tb_instr_wb_slave_no_stall_read(TB_Instr_wb_slave * tb) {
   //`````````````````````````````````
   //      Set inputs
   
-  core->stall_request_i = 0;
   uint32_t addr = rand();
   core->wb_adr_i = addr;
   core->wb_we_i = 0;
@@ -75,18 +74,62 @@ void tb_instr_wb_slave_no_stall_read(TB_Instr_wb_slave * tb) {
   core->wb_stb_i = 1;
   core->wb_cyc_i = 1;
 
+  core->injected_data_i = rand();
+
+  //`````````````````````````````````
+  //      Checks 
+  
+  tb->check(COND_wishbone, (core->wb_ack_o == 0)); 
+
   //=================================
   //      Tick (1)
   
   tb->tick();
 
   //`````````````````````````````````
+  //      Set inputs
+  
+  core->wb_adr_i = 0;
+  core->wb_we_i = 0;
+  core->wb_sel_i = 0;
+  core->wb_stb_i = 0;
+
+  //`````````````````````````````````
   //      Checks 
   
+  tb->check(COND_wishbone, (core->wb_ack_o == 1)); 
+
+  //=================================
+  //      Tick (2)
   
+  tb->tick();
+
+  //`````````````````````````````````
+  //      Checks 
+  
+  tb->check(COND_wishbone, (core->wb_ack_o == 0)); 
+
+  //`````````````````````````````````
+  //      Set inputs
+  
+  core->wb_cyc_i = 0;
+
+  //=================================
+  //      Tick (3)
+  
+  tb->tick();
 
   //`````````````````````````````````
   //      Formal Checks 
+  
+  CHECK("tb_instr_wb_slave.no_stall_read.01",
+      tb->conditions[COND_wishbone],
+      "Failed to implement the wishbone protocol", tb->err_cycles[COND_wishbone]);
+}
+
+void tb_instr_wb_slave_no_stall_write(TB_Instr_wb_slave * tb) {
+  Vtb_instr_wb_slave * core = tb->core;
+  core->testcase = 2;
 }
 
 int main(int argc, char ** argv, char ** env) {
@@ -105,9 +148,6 @@ int main(int argc, char ** argv, char ** env) {
 
   tb_instr_wb_slave_no_stall_read(tb);
   tb_instr_wb_slave_no_stall_write(tb);
-
-  tb_instr_wb_slave_stall_read(tb);
-  tb_instr_wb_slave_stall_write(tb);
 
   /************************************************************/
 

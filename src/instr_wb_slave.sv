@@ -30,8 +30,8 @@ module instr_wb_slave (
   input   logic[31:0]  wb_adr_i,
   output  logic[31:0]  wb_dat_o,
   input   logic[31:0]  wb_dat_i,
-  input   logic        wb_we_o,
-  input   logic[3:0]   wb_sel_o,
+  input   logic        wb_we_i,
+  input   logic[3:0]   wb_sel_i,
   input   logic        wb_stb_i,
   output  logic        wb_ack_o,
   input   logic        wb_cyc_i,
@@ -40,47 +40,46 @@ module instr_wb_slave (
   //=================================
   //    Instrumentation interface
   
-  input   logic        stall_request_i,
-  input   logic[31:0]  injected_data_i,
-  output  logic[31:0]  sniffed_data_o
+  input   logic[31:0]  injected_data_i
 );
 
 enum logic[1:0] {
   IDLE,
-  STALL, 
   RESPONSE
 } state_d, state_q;
 
+logic wb_ack_d, wb_ack_q;
+
 always_comb begin
   state_d = state_q;
+  wb_ack_d = 0;
 
   case(state_q)
     IDLE: begin
-      if(wb_stb_i && wb_cyc_o) begin
-        if(stall_request_i) begin
-          state_d = STALL;
-        end else begin
-          state_d = RESPONSE;
-        end
-      end
-      STALL: begin
-        if(!stall_request_i) begin
-          state_d = RESPONSE;
-        end
-      end
-      RESPONSE: begin
-        state_d = IDLE;
+      if(wb_stb_i && wb_cyc_i) begin
+        wb_ack_d = 1;
+        state_d = RESPONSE;
       end
     end
+    RESPONSE: begin
+      state_d = IDLE;
+    end
+    default: begin end
   endcase
 end
 
 always_ff @(posedge clk_i) begin
   if(rst_i) begin
     state_q <= IDLE;
+    wb_ack_q <= 0;
   end else begin
     state_q  <=  state_d;
+    wb_ack_q <= wb_ack_d;
   end
 end
+
+assign wb_dat_o = injected_data_i;
+assign wb_ack_o = wb_ack_q;
+assign wb_stall_o = 0;
 
 endmodule // instr_wb_slave

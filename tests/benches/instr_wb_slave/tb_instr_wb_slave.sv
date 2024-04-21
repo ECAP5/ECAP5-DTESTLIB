@@ -42,9 +42,7 @@ module tb_instr_wb_slave (
   //=================================
   //    Instrumentation interface
   
-  input   logic        stall_request_i,
-  input   logic[31:0]  injected_data_i,
-  output  logic[31:0]  sniffed_data_o
+  input   logic[31:0]  injected_data_i
 );
 
 instr_wb_slave dut (
@@ -53,15 +51,13 @@ instr_wb_slave dut (
   .wb_adr_i         (wb_adr_i),
   .wb_dat_o         (wb_dat_o),
   .wb_dat_i         (wb_dat_i),
-  .wb_we_o          (wb_we_o),
-  .wb_sel_o         (wb_sel_o),
+  .wb_we_i          (wb_we_i),
+  .wb_sel_i         (wb_sel_i),
   .wb_stb_i         (wb_stb_i),
   .wb_ack_o         (wb_ack_o),
   .wb_cyc_i         (wb_cyc_i),
   .wb_stall_o       (wb_stall_o),
-  .stall_request_i  (stall_request_i),
-  .injected_data_i  (injected_data_i),
-  .sniffed_data_o   (sniffed_data_o)
+  .injected_data_i  (injected_data_i)
 );
 
 endmodule // tb_instr_wb_slave
