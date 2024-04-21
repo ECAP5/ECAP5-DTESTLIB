@@ -99,23 +99,23 @@ public:
     this->tickcount += 1;
     this->cycle += 1;
 
+    core->clk_i = 1;
+    core->eval();
+    if(this->trace) {
+      this->trace->dump(100 * this->tickcount + 1);
+    }
+
     core->clk_i = 0;
     core->eval();
     if(this->trace) {
-      this->trace->dump(10 * this->tickcount - 2);
+      this->trace->dump(100 * this->tickcount + 50);
+      this->trace->flush();
     }
 
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(10 * this->tickcount);
-    }
-
-    core->clk_i = 0;
-    core->eval();
-    if(this->trace) {
-      this->trace->dump(10 * this->tickcount+5);
-      this->trace->flush();
+      this->trace->dump(100 * this->tickcount + 100);
     }
   }
 
