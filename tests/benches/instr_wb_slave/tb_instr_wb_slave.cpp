@@ -37,8 +37,7 @@ enum CondId {
 
 enum TestcaseId {
   T_NO_STALL_READ =  0,
-  T_NO_STALL_WRITE = 1,
-  T_MEMORY_STALL = 2
+  T_NO_STALL_WRITE = 1
 };
 
 class TB_Instr_wb_slave : public Testbench<Vtb_instr_wb_slave> {
@@ -213,87 +212,6 @@ void tb_instr_wb_slave_no_stall_write(TB_Instr_wb_slave * tb) {
       "Failed to implement the wishbone protocol", tb->err_cycles[COND_wishbone]);
 }
 
-void tb_instr_wb_slave_memory_stall(TB_Instr_wb_slave * tb) {
-  Vtb_instr_wb_slave * core = tb->core;
-  core->testcase = T_MEMORY_STALL;
-  
-  // The following actions are performed in this test :
-  //    tick 0. Set inputs for read with memory stall
-
-  //=================================
-  //      Tick (0)
-  
-  tb->reset();
-  
-  //`````````````````````````````````
-  //      Set inputs
-  
-  uint32_t addr = rand();
-  core->wb_adr_i = addr;
-  core->wb_we_i = 0;
-  core->wb_sel_i = 0xF;
-  core->wb_stb_i = 1;
-  core->wb_cyc_i = 1;
-
-  core->stall_request_i = 1;
-  core->injected_data_i = rand();
-
-  //`````````````````````````````````
-  //      Checks 
-  
-  tb->check(COND_wishbone, (core->wb_ack_o == 0)); 
-
-  //=================================
-  //      Tick (1)
-  
-  tb->tick();
-
-  //=================================
-  //      Tick (2)
-  
-  tb->tick();
-
-  //`````````````````````````````````
-  //      Set inputs
-  
-  core->wb_adr_i = 0;
-  core->wb_we_i = 0;
-  core->wb_sel_i = 0;
-  core->wb_stb_i = 0;
-
-  //`````````````````````````````````
-  //      Checks 
-  
-  tb->check(COND_wishbone, (core->wb_ack_o == 1)); 
-
-  //=================================
-  //      Tick (3)
-  
-  tb->tick();
-
-  //`````````````````````````````````
-  //      Checks 
-  
-  tb->check(COND_wishbone, (core->wb_ack_o == 0)); 
-
-  //`````````````````````````````````
-  //      Set inputs
-  
-  core->wb_cyc_i = 0;
-
-  //=================================
-  //      Tick (4)
-  
-  tb->tick();
-
-  //`````````````````````````````````
-  //      Formal Checks 
-  
-  CHECK("tb_instr_wb_slave.memory_stall.01",
-      tb->conditions[COND_wishbone],
-      "Failed to implement the wishbone protocol", tb->err_cycles[COND_wishbone]);
-}
-
 int main(int argc, char ** argv, char ** env) {
   srand(time(NULL));
   Verilated::traceEverOn(true);
@@ -310,8 +228,6 @@ int main(int argc, char ** argv, char ** env) {
 
   tb_instr_wb_slave_no_stall_read(tb);
   tb_instr_wb_slave_no_stall_write(tb);
-
-  tb_instr_wb_slave_memory_stall(tb);
 
   /************************************************************/
 
