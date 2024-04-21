@@ -55,7 +55,6 @@ logic wb_ack_d, wb_ack_q;
 always_comb begin
   state_d = state_q;
   wb_ack_d = 0;
-  wb_stall_d = 0;
 
   case(state_q)
     IDLE: begin
