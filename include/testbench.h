@@ -102,7 +102,7 @@ public:
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(100 * this->tickcount + 1);
+      this->trace->dump(100 * this->tickcount);
     }
 
     core->clk_i = 0;
@@ -115,7 +115,7 @@ public:
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(100 * this->tickcount + 100);
+      this->trace->dump(100 * this->tickcount + 99);
     }
   }
 
