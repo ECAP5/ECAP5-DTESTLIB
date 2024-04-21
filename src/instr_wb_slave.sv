@@ -51,10 +51,12 @@ enum logic[1:0] {
 } state_d, state_q;
 
 logic wb_ack_d, wb_ack_q;
+logic wb_stall_d, wb_stall_q;
 
 always_comb begin
   state_d = state_q;
   wb_ack_d = 0;
+  wb_stall_d = 0;
 
   case(state_q)
     IDLE: begin
@@ -66,12 +68,11 @@ always_comb begin
           state_d = RESPONSE;
         end
       end
+      wb_stall_d = stall_request_i;
     end
     STALL: begin
-      if(stall_request_i == 0) begin
-        state_d = RESPONSE;
-        wb_ack_d = 1;
-      end
+      state_d = RESPONSE;
+      wb_ack_d = 1;
     end
     RESPONSE: begin
       state_d = IDLE;
@@ -84,14 +85,16 @@ always_ff @(posedge clk_i) begin
   if(rst_i) begin
     state_q <= IDLE;
     wb_ack_q <= 0;
+    wb_stall_q <= stall_request_i;
   end else begin
     state_q  <=  state_d;
     wb_ack_q <= wb_ack_d;
+    wb_stall_q <= wb_stall_d;
   end
 end
 
 assign wb_dat_o = injected_data_i;
 assign wb_ack_o = wb_ack_q;
-assign wb_stall_o = stall_request_i;
+assign wb_stall_o = wb_stall_q;
 
 endmodule // instr_wb_slave

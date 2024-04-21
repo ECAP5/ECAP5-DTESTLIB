@@ -256,17 +256,10 @@ void tb_instr_wb_slave_memory_stall(TB_Instr_wb_slave * tb) {
   //`````````````````````````````````
   //      Set inputs
   
-  core->stall_request_i = 0;
-
   core->wb_adr_i = 0;
   core->wb_we_i = 0;
   core->wb_sel_i = 0;
   core->wb_stb_i = 0;
-
-  //=================================
-  //      Tick (3)
-  
-  tb->tick();
 
   //`````````````````````````````````
   //      Checks 
@@ -274,7 +267,7 @@ void tb_instr_wb_slave_memory_stall(TB_Instr_wb_slave * tb) {
   tb->check(COND_wishbone, (core->wb_ack_o == 1)); 
 
   //=================================
-  //      Tick (4)
+  //      Tick (3)
   
   tb->tick();
 
@@ -289,7 +282,7 @@ void tb_instr_wb_slave_memory_stall(TB_Instr_wb_slave * tb) {
   core->wb_cyc_i = 0;
 
   //=================================
-  //      Tick (5)
+  //      Tick (4)
   
   tb->tick();
 
