@@ -42,6 +42,7 @@ module tb_instr_wb_slave (
   //=================================
   //    Instrumentation interface
   
+  input   logic        stall_request_i,
   input   logic[31:0]  injected_data_i
 );
 
@@ -57,6 +58,7 @@ instr_wb_slave dut (
   .wb_ack_o         (wb_ack_o),
   .wb_cyc_i         (wb_cyc_i),
   .wb_stall_o       (wb_stall_o),
+  .stall_request_i  (stall_request_i),
   .injected_data_i  (injected_data_i)
 );
 

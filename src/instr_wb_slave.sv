@@ -40,11 +40,13 @@ module instr_wb_slave (
   //=================================
   //    Instrumentation interface
   
+  input   logic        stall_request_i,
   input   logic[31:0]  injected_data_i
 );
 
 enum logic[1:0] {
   IDLE,
+  STALL,
   RESPONSE
 } state_d, state_q;
 
@@ -57,8 +59,18 @@ always_comb begin
   case(state_q)
     IDLE: begin
       if(wb_stb_i && wb_cyc_i) begin
-        wb_ack_d = 1;
+        if(stall_request_i) begin
+          state_d = STALL;   
+        end else begin
+          wb_ack_d = 1;
+          state_d = RESPONSE;
+        end
+      end
+    end
+    STALL: begin
+      if(stall_request_i == 0) begin
         state_d = RESPONSE;
+        wb_ack_d = 1;
       end
     end
     RESPONSE: begin
@@ -80,6 +92,6 @@ end
 
 assign wb_dat_o = injected_data_i;
 assign wb_ack_o = wb_ack_q;
-assign wb_stall_o = 0;
+assign wb_stall_o = stall_request_i;
 
 endmodule // instr_wb_slave
