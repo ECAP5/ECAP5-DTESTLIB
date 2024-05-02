@@ -64,8 +64,7 @@ public:
 
   ~Testbench() {
     this->core->final();
-    this->trace->close();
-    this->trace = NULL;
+    this->close_trace();
     delete this->core;
     this->core = NULL;
 
@@ -84,6 +83,14 @@ public:
       this->trace = new VerilatedVcdC;
       this->core->trace(this->trace, 99);
       this->trace->open(path);
+    }
+  }
+
+  void close_trace() {
+    if(this->trace != NULL) {
+      this->trace->close();
+      delete this->trace;
+      this->trace = NULL;
     }
   }
 
