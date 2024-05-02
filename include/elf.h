@@ -70,7 +70,7 @@ void load_elf(std::string path, uint8_t * buffer, uint32_t size) {
   fclose(fd);
 }
 
-void hexdump_buffer(uint32_t size, uint32_t max_size) {
+void hexdump_buffer(uint8_t * buffer, uint32_t size, uint32_t max_size) {
   if(size > max_size) {
     size = max_size;
   }
