@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void load_elf(std::string path, void * buffer, uint32_t size) {
+void load_elf(std::string path, uint8_t * buffer, uint32_t size) {
   FILE * fd = fopen(path.c_str(), "rb");
   if(fd == NULL) {
     printf("Couldn't find elf file at path %s\n", path.c_str());
