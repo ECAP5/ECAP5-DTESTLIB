@@ -44,11 +44,12 @@ module instr_wb_slave (
   input   logic[31:0]  injected_data_i
 );
 
-enum logic[1:0] {
+typedef enum logic[1:0] {
   IDLE,
   STALL,
   RESPONSE
-} state_d, state_q;
+} state_t;
+state_t state_d, state_q;
 
 logic wb_ack_d, wb_ack_q;
 
