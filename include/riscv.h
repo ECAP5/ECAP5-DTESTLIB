@@ -3,44 +3,44 @@
 
 #include <stdint.h>
 
-#define DTLIB_OPCODE_LUI    0b0110111;
-#define DTLIB_OPCODE_AUIPC  0b0010111;
-#define DTLIB_OPCODE_OP     0b0110011;
-#define DTLIB_OPCODE_OP_IMM 0b0010011;
-#define DTLIB_OPCODE_JAL    0b1101111;
-#define DTLIB_OPCODE_JALR   0b1100111;
-#define DTLIB_OPCODE_BRANCH 0b1100011;
-#define DTLIB_OPCODE_LOAD   0b0000011;
-#define DTLIB_OPCODE_STORE  0b0100011;
+#define DTLIB_OPCODE_LUI    0b0110111
+#define DTLIB_OPCODE_AUIPC  0b0010111
+#define DTLIB_OPCODE_OP     0b0110011
+#define DTLIB_OPCODE_OP_IMM 0b0010011
+#define DTLIB_OPCODE_JAL    0b1101111
+#define DTLIB_OPCODE_JALR   0b1100111
+#define DTLIB_OPCODE_BRANCH 0b1100011
+#define DTLIB_OPCODE_LOAD   0b0000011
+#define DTLIB_OPCODE_STORE  0b0100011
 
-#define DTLIB_FUNC3_JALR    0b000;
-#define DTLIB_FUNC3_BEQ     0b000;
-#define DTLIB_FUNC3_BNE     0b001;
-#define DTLIB_FUNC3_BLT     0b100;
-#define DTLIB_FUNC3_BGE     0b101;
-#define DTLIB_FUNC3_BLTU    0b110;
-#define DTLIB_FUNC3_BGEU    0b111;
-#define DTLIB_FUNC3_LB      0b000;
-#define DTLIB_FUNC3_LH      0b001;
-#define DTLIB_FUNC3_LW      0b010;
-#define DTLIB_FUNC3_LBU     0b100;
-#define DTLIB_FUNC3_LHU     0b101;
-#define DTLIB_FUNC3_SB      0b000;
-#define DTLIB_FUNC3_SH      0b001;
-#define DTLIB_FUNC3_SW      0b010;
-#define DTLIB_FUNC3_ADD     0b000;
-#define DTLIB_FUNC3_SLT     0b010;
-#define DTLIB_FUNC3_SLTU    0b011;
-#define DTLIB_FUNC3_XOR     0b100;
-#define DTLIB_FUNC3_OR      0b110;
-#define DTLIB_FUNC3_AND     0b111;
-#define DTLIB_FUNC3_SLL     0b001;
-#define DTLIB_FUNC3_SRL     0b101;
+#define DTLIB_FUNC3_JALR    0b000
+#define DTLIB_FUNC3_BEQ     0b000
+#define DTLIB_FUNC3_BNE     0b001
+#define DTLIB_FUNC3_BLT     0b100
+#define DTLIB_FUNC3_BGE     0b101
+#define DTLIB_FUNC3_BLTU    0b110
+#define DTLIB_FUNC3_BGEU    0b111
+#define DTLIB_FUNC3_LB      0b000
+#define DTLIB_FUNC3_LH      0b001
+#define DTLIB_FUNC3_LW      0b010
+#define DTLIB_FUNC3_LBU     0b100
+#define DTLIB_FUNC3_LHU     0b101
+#define DTLIB_FUNC3_SB      0b000
+#define DTLIB_FUNC3_SH      0b001
+#define DTLIB_FUNC3_SW      0b010
+#define DTLIB_FUNC3_ADD     0b000
+#define DTLIB_FUNC3_SLT     0b010
+#define DTLIB_FUNC3_SLTU    0b011
+#define DTLIB_FUNC3_XOR     0b100
+#define DTLIB_FUNC3_OR      0b110
+#define DTLIB_FUNC3_AND     0b111
+#define DTLIB_FUNC3_SLL     0b001
+#define DTLIB_FUNC3_SRL     0b101
 
-#define DTLIB_FUNC7_ADD     0b0000000;
-#define DTLIB_FUNC7_SUB     0b0100000;
-#define DTLIB_FUNC7_SRL     0b0000000;
-#define DTLIB_FUNC7_SRA     0b0100000;
+#define DTLIB_FUNC7_ADD     0b0000000
+#define DTLIB_FUNC7_SUB     0b0100000
+#define DTLIB_FUNC7_SRL     0b0000000
+#define DTLIB_FUNC7_SRA     0b0100000
 
 uint32_t sign_extend(uint32_t data, uint32_t nb_bits) {
   data &= (1 << nb_bits)-1;
