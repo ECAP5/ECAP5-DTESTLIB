@@ -115,155 +115,155 @@ uint32_t instr_j(uint32_t opcode, uint32_t rd, uint32_t imm) {
 }
 
 
-void instr_lui(uint32_t rd, uint32_t imm) {
+uint32_t instr_lui(uint32_t rd, uint32_t imm) {
   return instr_u(DTLIB_OPCODE_LUI, rd, imm << 12);
   }
 
-void instr_auipc(uint32_t rd, uint32_t imm) {
+uint32_t instr_auipc(uint32_t rd, uint32_t imm) {
   return instr_u(DTLIB_OPCODE_AUIPC, rd, imm << 12);
 }
 
-void instr_jal(uint32_t rd, uint32_t imm) {
+uint32_t instr_jal(uint32_t rd, uint32_t imm) {
   return instr_j(DTLIB_OPCODE_JAL, rd, imm);
 }
 
-void instr_jalr(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_jalr(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_JALR, rd, DTLIB_FUNC3_JALR, rs1, imm);
 }
 
-void instr_beq(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_beq(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BEQ, rs1, rs2, imm);
 }
 
-void instr_bne(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_bne(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BNE, rs1, rs2, imm);
 }
 
-void instr_blt(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_blt(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BLT, rs1, rs2, imm);
 }
 
-void instr_bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BGE, rs1, rs2, imm);
 }
 
-void instr_bltu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_bltu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BLTU, rs1, rs2, imm);
 }
 
-void instr_bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_b(DTLIB_OPCODE_BRANCH, DTLIB_FUNC3_BGEU, rs1, rs2, imm);
 }
 
-void instr_lb(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_lb(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_LOAD, rd, DTLIB_FUNC3_LB, rs1, imm);
 }
 
-void instr_lbu(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_lbu(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_LOAD, rd, DTLIB_FUNC3_LBU, rs1, imm);
 }
 
-void instr_lh(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_lh(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_LOAD, rd, DTLIB_FUNC3_LH, rs1, imm);
 }
 
-void instr_lhu(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_lhu(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_LOAD, rd, DTLIB_FUNC3_LHU, rs1, imm);
 }
 
-void instr_lw(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_lw(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_LOAD, rd, DTLIB_FUNC3_LW, rs1, imm);
 }
 
-void instr_sb(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_sb(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_s(DTLIB_OPCODE_STORE, DTLIB_FUNC3_SB, rs1, rs2, imm);
 }
 
-void instr_sh(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_sh(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_s(DTLIB_OPCODE_STORE, DTLIB_FUNC3_SH, rs1, rs2, imm);
 }
 
-void instr_sw(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+uint32_t instr_sw(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return instr_s(DTLIB_OPCODE_STORE, DTLIB_FUNC3_SW, rs1, rs2, imm);
 }
 
-void instr_addi(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_addi(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_ADD, rs1, imm);
 }
 
-void instr_slti(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_slti(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_SLT, rs1, imm);
 }
 
-void instr_sltiu(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_sltiu(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_SLTU, rs1, imm);
 }
 
-void instr_xori(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_xori(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_XOR, rs1, imm);
 }
 
-void instr_ori(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_ori(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_OR, rs1, imm);
 }
 
-void instr_andi(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_andi(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_AND, rs1, imm);
 }
 
-void instr_slli(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_slli(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_SLL, rs1, imm);
 }
 
-void instr_srli(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_srli(uint32_t rd, uint32_t rs1, uint32_t imm) {
   // set func7
   uint32_t imm_w_func7 = (imm & 0x1F) | ((1 << 6) << 25);
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_SRL, rs1, imm_w_func7);
 }
 
-void instr_srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
+uint32_t instr_srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
   // set func7
   uint32_t imm_w_func7 = (imm & 0x1F) | ((1 << 5) << 5);
   return instr_i(DTLIB_OPCODE_OP_IMM, rd, DTLIB_FUNC3_SRL, rs1, imm_w_func7);
 }
 
-void instr_add(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_add(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_ADD, rs1, rs2, DTLIB_FUNC7_ADD);
 }
 
-void instr_sub(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_sub(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_ADD, rs1, rs2, DTLIB_FUNC7_SUB);
 }
 
-void instr_slt(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_slt(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_SLT, rs1, rs2, 0);
 }
 
-void instr_sltu(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_sltu(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_SLTU, rs1, rs2, 0);
 }
 
-void instr_xor(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_xor(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_XOR, rs1, rs2, 0);
 }
 
-void instr_or(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_or(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_OR, rs1, rs2, 0);
 }
 
-void instr_and(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_and(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_AND, rs1, rs2, 0);
 }
 
-void instr_sll(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_sll(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_SLL, rs1, rs2, 0);
 }
 
-void instr_srl(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_srl(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_SRL, rs1, rs2, DTLIB_FUNC7_SRL);
 }
 
-void instr_sra(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+uint32_t instr_sra(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return instr_r(DTLIB_OPCODE_OP, rd, DTLIB_FUNC3_SRL, rs1, rs2, DTLIB_FUNC7_SRA);
 }
 
