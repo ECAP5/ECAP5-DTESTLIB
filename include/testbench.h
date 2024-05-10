@@ -126,6 +126,12 @@ public:
     }
   }
 
+  void n_tick(int n) {
+    for(int i = 0; i < n; i++) {
+      this->tick();
+    }
+  }
+
   void open_testdata(const char * path) {
     this->testdata_path = path;
     // open the file to clear the content
