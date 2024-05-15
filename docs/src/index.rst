@@ -1,5 +1,5 @@
 ECAP5-DTESTLIB
-============
+==============
 
 RTL testing libraries for ECAP5
 
@@ -28,3 +28,10 @@ License
 
     You should have received a copy of the GNU General Public License
     along with ECAP5-DTESTLIB.  If not, see <http://www.gnu.org/licenses/>.
+
+.. toctree::
+   :hidden:
+   :maxdepth: 4
+   :caption: Documentations
+
+   instr_wb_slave
