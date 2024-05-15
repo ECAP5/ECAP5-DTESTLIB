@@ -11,7 +11,7 @@ import os, sys
 project = 'ECAP5-DTESTLIB'
 copyright = '2024, Clément Chaine'
 author = 'Clément Chaine'
-release = '1.0.0'
+version = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -29,6 +29,7 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+html_logo = 'assets/logo.svg'
 html_theme_options = {
     'display_version': True,
     'collapse_navigation': False,
