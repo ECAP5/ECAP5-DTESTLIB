@@ -1,2 +1,2 @@
-# ECAP5-DTLIB
+# ECAP5-DTESTLIB
 HDL testing libraries for ECAP5
