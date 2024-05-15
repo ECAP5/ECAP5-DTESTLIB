@@ -2,10 +2,10 @@
 [*] GTKWave Analyzer v3.4.0 (w)1999-2022 BSI
 [*] Sun Apr 21 14:05:31 2024
 [*]
-[dumpfile] "/Users/cchaine/Desktop/Documents/projects/.ecap5.nosync/design/tlib/build/tests/waves/instr_wb_slave.vcd"
+[dumpfile] "/Users/cchaine/Desktop/Documents/projects/.ecap5.nosync/design/testlib/build/tests/waves/instr_wb_slave.vcd"
 [dumpfile_mtime] "Sun Apr 21 14:03:48 2024"
 [dumpfile_size] 2108
-[savefile] "/Users/cchaine/Desktop/Documents/projects/.ecap5.nosync/design/tlib/config/gtkwave/config/tb_instr_wb_slave.gtkw"
+[savefile] "/Users/cchaine/Desktop/Documents/projects/.ecap5.nosync/design/testlib/config/gtkwave/config/tb_instr_wb_slave.gtkw"
 [timestart] 8
 [size] 2320 1305
 [pos] -1 -1

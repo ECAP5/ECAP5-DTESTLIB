@@ -2,7 +2,7 @@ if(NOT DEFINED ecap5_treq_EXECUTABLE)
   message(STATUS "Collecting ECAP5-TREQ")
   # Download external dependencies
   FetchContent_Declare(ECAP5_TREQ
-    GIT_REPOSITORY https://github.com/cchaine/ECAP5-TREQ  
+    GIT_REPOSITORY https://github.com/ecap5/ECAP5-TREQ  
     GIT_TAG tags/v2.1.1
   )
   FetchContent_MakeAvailable(ECAP5_TREQ)
