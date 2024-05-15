@@ -146,10 +146,11 @@ public:
       if(condition) {
         fprintf(f, "%s;%d\n", testbench, true);
       } else {
+        fprintf(f, "%s;%d;", testbench, false);
         if(tick != -1) {
           fprintf(f, "[tick(%d)]: ", tick);
         }
-        fprintf(f, "%s;%d;%s\n", testbench, false, msg);
+        fprintf(f, "%s\n", msg);
       }
       fclose(f);
     }
