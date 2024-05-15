@@ -43,7 +43,7 @@ set(TEST_BINARIES)
 set(TEST_TARGETS)
 set(TEST_OUTPUTS)
 macro(add_testbench module)
-  cmake_parse_arguments(ARG "PUBLIC"
+  cmake_parse_arguments(ARG ""
                             "BENCH"
                             "LIBS"
                             ${ARGN})
@@ -60,24 +60,13 @@ macro(add_testbench module)
   # Create the test executable
   add_executable(${TARGET} ${BENCH_DIR}/${module}/${TARGET}.cpp)
   target_include_directories(${TARGET} PUBLIC ${TEST_INCLUDE_DIR})
-  if(${ARG_PUBLIC})
-    verilate(${TARGET}
-      PREFIX V${TARGET}
-      SOURCES ${SV_HEADERS}
-              ${BENCH_DIR}/${module}/${TARGET}.sv
-              ${ARG_LIBS}
-      INCLUDE_DIRS ${SRC_DIR}
-      TRACE
-      PUBLIC)
-  else()
-    verilate(${TARGET}
-      PREFIX V${TARGET}
-      SOURCES ${SV_HEADERS}
-              ${BENCH_DIR}/${module}/${TARGET}.sv
-              ${ARG_LIBS}
-      INCLUDE_DIRS ${SRC_DIR}
-      TRACE)
-  endif()
+  verilate(${TARGET}
+    PREFIX V${TARGET}
+    SOURCES ${SV_HEADERS}
+            ${BENCH_DIR}/${module}/${TARGET}.sv
+            ${ARG_LIBS}
+    INCLUDE_DIRS ${SRC_DIR}
+    TRACE)
 
   set(TEST_TARGET simulate_${ARG_BENCH})
   set(TEST_OUTPUT ${TESTDATA_DIR}/${ARG_BENCH}.csv)
