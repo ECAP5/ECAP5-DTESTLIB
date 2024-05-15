@@ -1,5 +1,5 @@
-#ifndef DTLIB_ELF_H
-#define DTLIB_ELF_H
+#ifndef DTESTLIB_ELF_H
+#define DTESTLIB_ELF_H
 
 #include <stdint.h>
 

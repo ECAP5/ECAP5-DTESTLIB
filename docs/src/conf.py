@@ -8,7 +8,7 @@ import os, sys
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'ECAP5-DTLIB'
+project = 'ECAP5-DTESTLIB'
 copyright = '2024, Clément Chaine'
 author = 'Clément Chaine'
 release = '1.0.0'
