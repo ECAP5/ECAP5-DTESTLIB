@@ -62,6 +62,8 @@ add_dependency(verilator-cmake
 include(${verilator_cmake_SOURCE_DIR}/cmake/verilator-config.cmake)
 include(${ecap5_treq_SOURCE_DIR}/config.cmake)
 list(APPEND CMAKE_MODULE_PATH "${sphinx_cmake_SOURCE_DIR}/cmake")
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/lint.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/testbench.cmake)
 
 # Include subdirectories
 
