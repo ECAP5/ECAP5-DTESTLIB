@@ -115,7 +115,7 @@ jobs:
 
   report:
     runs-on: self-hosted
-    needs: bitstream
+    needs: simulate
     if: always()
 
     steps:
