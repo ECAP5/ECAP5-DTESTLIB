@@ -50,12 +50,15 @@ public:
   int * err_cycles;
   int cycle;
 
+  int clk_period_in_ps;
+
   Testbench() {
     this->tickcount = 0;
     this->core = new Module;
     this->success = true;
     this->testdata_path = NULL;
     this->debug_log = false;
+    this->clk_period_in_ps = 10;
 
     this->conditions = NULL;
     this->err_cycles = NULL;
@@ -106,13 +109,13 @@ public:
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(10 * this->tickcount + 1);
+      this->trace->dump(this->clk_period_in_ps * this->tickcount + 1);
     }
 
     core->clk_i = 0;
     core->eval();
     if(this->trace) {
-      this->trace->dump(10 * this->tickcount + 5);
+      this->trace->dump(this->clk_period_in_ps * this->tickcount + 5);
       this->trace->flush();
     }
 
@@ -122,7 +125,7 @@ public:
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(10 * this->tickcount);
+      this->trace->dump(this->clk_period_in_ps * this->tickcount);
     }
   }
 
