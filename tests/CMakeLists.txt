@@ -19,75 +19,31 @@
 # You should have received a copy of the GNU General Public License
 # along with ECAP5-DTESTLIB.  If not, see <http://www.gnu.org/licenses/>.
 
+# Bench parent directory
 set(BENCH_DIR ${CMAKE_CURRENT_SOURCE_DIR}/benches/)
+# C++ bench include directory
 set(TEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
-set(SRC_DIR ${CMAKE_SOURCE_DIR}/src/)
-set(INCLUDE_DIR ${SRC_DIR}/include/)
+# HDL source directories
+set(SRC_DIRS ${CMAKE_SOURCE_DIR}/src/)
+# HDL library directories
 set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/)
+# Bench CSV output directory
 set(TESTDATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/testdata/)
-set(CONFIG_DIR ${CMAKE_SOURCE_DIR}/config/)
-
-# Create folders for the waves and testdata
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/waves)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testdata)
 
 # Lint
-file(GLOB SRC_FILES ${SRC_DIR}/*.sv)
-file(GLOB INCLUDE_FILES ${INCLUDE_DIR}/*.svh)
-add_custom_target(lint 
-  COMMAND verible-verilog-lint ${SRC_FILES} ${INCLUDE_FILES} --rules_config="${CONFIG_DIR}/verible-lint.rules" --waiver_files="${CONFIG_DIR}/verible-lint.waives"
-  DEPENDS ${SRC_FILES} ${INCLUDE_FILES})
+add_lint_target(
+  TARGET lint
+  SRC_DIRS ${SRC_DIRS}
+)
 
-# Testbench
-set(TEST_BINARIES)
-set(TEST_TARGETS)
-set(TEST_OUTPUTS)
-macro(add_testbench module)
-  cmake_parse_arguments(ARG ""
-                            "BENCH"
-                            "LIBS"
-                            ${ARGN})
-
-  if("${ARG_BENCH}" STREQUAL "")
-    set(ARG_BENCH ${module})
-  endif()
-  set(TARGET tb_${ARG_BENCH})
-
-  # Make a file list for testing libraries
-  list(TRANSFORM ARG_LIBS APPEND ".sv")
-  list(TRANSFORM ARG_LIBS PREPEND ${LIBS_DIR})
-
-  # Create the test executable
-  add_executable(${TARGET} ${BENCH_DIR}/${module}/${TARGET}.cpp)
-  target_include_directories(${TARGET} PUBLIC ${TEST_INCLUDE_DIR})
-  verilate(${TARGET}
-    PREFIX V${TARGET}
-    SOURCES ${SV_HEADERS}
-            ${BENCH_DIR}/${module}/${TARGET}.sv
-            ${ARG_LIBS}
-    INCLUDE_DIRS ${SRC_DIR}
-    TRACE)
-
-  set(TEST_TARGET simulate_${ARG_BENCH})
-  set(TEST_OUTPUT ${TESTDATA_DIR}/${ARG_BENCH}.csv)
-  # Create the ${TEST_TARGET} command to run the test
-  get_target_property(BINARY_DIR "${TARGET}" BINARY_DIR)
-  if(${DEBUGLOG})
-    set(RUN_TARGET_ARGUMENT "-v")  
-  endif()
-  add_custom_command(
-    COMMAND ${TARGET} ${RUN_TARGET_ARGUMENT}
-    OUTPUT ${TEST_OUTPUT}
-    DEPENDS ${TARGET}
-    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR})
-  add_custom_target(${TEST_TARGET} DEPENDS ${TEST_OUTPUT})
-  # Add the ${TEST_TARGET} target to the test targets
-  list(APPEND TEST_BINARIES ${TARGET})
-  list(APPEND TEST_TARGETS ${TEST_TARGET})
-  list(APPEND TEST_OUTPUTS ${TEST_OUTPUT})
-endmacro()
-
-add_testbench(instr_wb_slave)
+# Add testbenches
+add_testbench(
+  MODULE       instr_wb_slave
+  BENCH_DIR    ${BENCH_DIR}
+  LIBS_DIR     ${LIBS_DIR}
+  TESTDATA_DIR ${TESTDATA_DIR}
+  SRC_DIRS     ${SRC_DIRS} 
+)
 
 # Main targets
 add_custom_target(build DEPENDS ${TEST_BINARIES})
