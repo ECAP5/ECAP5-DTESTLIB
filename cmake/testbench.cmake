@@ -22,7 +22,7 @@
 macro(add_testbench)
   cmake_parse_arguments(ARG ""
                             "MODULE;BENCH_DIR;LIBS_DIR;BENCH;TESTDATA_DIR"
-                            "SRC_DIRS;LIBS;CUSTOM_DEPENDS"
+                            "SRC_DIRS;INCLUDE_DIRS;LIBS;CUSTOM_DEPENDS"
                             ${ARGN})
   if(NOT ARG_BENCH_DIR)
     message(FATAL_ERROR "Need a bench directory")
@@ -41,8 +41,8 @@ macro(add_testbench)
   endif()
 
   # Create folders for the waves and testdata
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/waves)
-  file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testdata)
+  file(MAKE_DIRECTORY ${TESTDATA_DIR}/waves)
+  file(MAKE_DIRECTORY ${TESTDATA_DIR}/testdata)
 
   if("${ARG_BENCH}" STREQUAL "")
     set(ARG_BENCH ${ARG_MODULE})
@@ -53,12 +53,16 @@ macro(add_testbench)
   list(TRANSFORM ARG_LIBS APPEND ".sv")
   list(TRANSFORM ARG_LIBS PREPEND ${ARG_LIBS_DIR})
 
+  # List include files
+  file(GLOB INCLUDE_FILES ${ARG_INCLUDE_DIRS}/*.svh)
+
   # Create the test executable
   add_executable(${TARGET} ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.cpp)
   target_include_directories(${TARGET} PUBLIC ${TEST_INCLUDE_DIR})
   verilate(${TARGET}
     PREFIX V${TARGET}
-    SOURCES ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.sv
+    SOURCES ${INCLUDE_FILES}
+            ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.sv
             ${ARG_LIBS}
     INCLUDE_DIRS ${ARG_SRC_DIRS}
     TRACE)
@@ -74,7 +78,7 @@ macro(add_testbench)
     COMMAND ${TARGET} ${RUN_TARGET_ARGUMENT}
     OUTPUT ${TEST_OUTPUT}
     DEPENDS ${TARGET}
-    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR})
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/tests/)
   add_custom_target(${TEST_TARGET} DEPENDS ${TEST_OUTPUT})
   # Add the ${TEST_TARGET} target to the test targets
   list(APPEND TEST_BINARIES ${TARGET})
