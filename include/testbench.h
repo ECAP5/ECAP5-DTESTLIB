@@ -50,7 +50,7 @@ public:
   int * err_cycles;
   int cycle;
 
-  int clk_period_in_ps;
+  uint64_t clk_period_in_ps;
 
   Testbench() {
     this->tickcount = 0;
@@ -109,13 +109,13 @@ public:
     core->clk_i = 1;
     core->eval();
     if(this->trace) {
-      this->trace->dump(this->clk_period_in_ps * this->tickcount + 1);
+      this->trace->dump(this->clk_period_in_ps * this->tickcount + (this->clk_period_in_ps / 10));
     }
 
     core->clk_i = 0;
     core->eval();
     if(this->trace) {
-      this->trace->dump(this->clk_period_in_ps * this->tickcount + 5);
+      this->trace->dump(this->clk_period_in_ps * this->tickcount + (this->clk_period_in_ps / 2));
       this->trace->flush();
     }
 
