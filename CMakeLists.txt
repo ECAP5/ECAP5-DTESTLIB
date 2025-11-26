@@ -22,7 +22,7 @@
 cmake_minimum_required(VERSION 3.21)
 include(FetchContent)
 
-project(ECAP5_DTESTLIB VERSION 1.0.0)
+project(ECAP5_DTESTLIB)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
