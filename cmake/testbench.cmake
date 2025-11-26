@@ -19,10 +19,34 @@
 # You should have received a copy of the GNU General Public License
 # along with ECAP5-DTESTLIB.  If not, see <http://www.gnu.org/licenses/>.
 
+function(get_all_sources_recursive TARGET_NAME OUTPUT_LIST)
+  set(CURRENT_FILES "")
+
+  get_target_property(RAW_SOURCES ${TARGET_NAME} INTERFACE_SOURCES)
+
+  if(RAW_SOURCES AND NOT "${RAW_SOURCES}" MATCHES "NOTFOUND")
+    list(APPEND CURRENT_FILES ${RAW_SOURCES})
+  endif()
+
+  get_target_property(RAW_LIBS ${TARGET_NAME} INTERFACE_LINK_LIBRARIES)
+  if(RAW_LIBS AND NOT "${RAW_LIBS}" MATCHES "NOTFOUND")
+    foreach(DEP ${RAW_LIBS})
+      if(TARGET ${DEP})
+        get_all_sources_recursive(${DEP} SUB_FILES_LIST)
+        list(APPEND CURRENT_FILES ${SUB_FILES_LIST})
+      else()
+        message(FATAL_ERROR "Recursive dependency ${DEP} not found")  
+      endif()
+    endforeach()
+  endif()
+
+  set(${OUTPUT_LIST} ${CURRENT_FILES} PARENT_SCOPE)
+endfunction()
+
 macro(add_testbench)
   cmake_parse_arguments(ARG ""
-                            "MODULE;BENCH_DIR;LIBS_DIR;BENCH;TESTDATA_DIR"
-                            "SRC_DIRS;INCLUDE_DIRS;LIBS;CUSTOM_DEPENDS"
+                            "MODULE;BENCH_DIR;BENCH;TESTDATA_DIR"
+                            "LIBS;CUSTOM_DEPENDS"
                             ${ARGN})
   if(NOT ARG_BENCH_DIR)
     message(FATAL_ERROR "Need a bench directory")
@@ -36,9 +60,15 @@ macro(add_testbench)
     message(FATAL_ERROR "Need a testdata directory")
   endif()
 
-  if(NOT ARG_SRC_DIRS)
-    message(FATAL_ERROR "Need at least one source directory")
+  if(NOT ARG_LIBS)
+    message(FATAL_ERROR "Need at least one source library")
   endif()
+
+  foreach(LIB ${ARG_LIBS})
+    if(NOT TARGET ${LIB})
+      message(FATAL_ERROR "Library ${LIB} not defined")
+    endif()
+  endforeach()
 
   # Create folders for the waves and testdata
   file(MAKE_DIRECTORY ${TESTDATA_DIR}/waves)
@@ -49,22 +79,20 @@ macro(add_testbench)
   endif()
   set(TARGET tb_${ARG_BENCH})
 
-  # Make a file list for testing libraries
-  list(TRANSFORM ARG_LIBS APPEND ".sv")
-  list(TRANSFORM ARG_LIBS PREPEND ${ARG_LIBS_DIR})
+  # Define a source collecting library
+  add_library(lib${TARGET} INTERFACE)
+  target_link_libraries(lib${TARGET} INTERFACE ${ARG_LIBS})
 
-  # List include files
-  file(GLOB INCLUDE_FILES ${ARG_INCLUDE_DIRS}/*.svh)
+  get_all_sources_recursive(lib${TARGET} ${TARGET}_SOURCES)
 
   # Create the test executable
   add_executable(${TARGET} ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.cpp)
   target_include_directories(${TARGET} PUBLIC ${TEST_INCLUDE_DIR})
   verilate(${TARGET}
-    PREFIX V${TARGET}
-    SOURCES ${INCLUDE_FILES}
-            ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.sv
-            ${ARG_LIBS}
-    INCLUDE_DIRS ${ARG_SRC_DIRS}
+    PREFIX     V${TARGET}
+    TOP_MODULE ${TARGET}
+    SOURCES    ${${TARGET}_SOURCES}
+               ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.sv
     TRACE)
 
   set(TEST_TARGET simulate_${ARG_BENCH})

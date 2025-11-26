@@ -9,15 +9,15 @@ macro(add_dependency)
   string(MAKE_C_IDENTIFIER "${ARG_GIT}" DEPENDENCY_ID)
   string(TOLOWER "${DEPENDENCY_ID}" DEPENDENCY_ID)
 
-  message("${DEPENDENCY_ID} ${${DEPENDENCY_ID}_VERSION}")
-
   # Check if the dependency is already present
   if(DEFINED ${DEPENDENCY_ID}_VERSION)
     # Check that the version is the same
     if(NOT ${DEPENDENCY_ID}_VERSION STREQUAL ARG_TAG)
-      message(FATAL_ERROR "Dependency ${DEPENDENCY_ID} version mismatched : ${${DEPENDENCY_ID}_VERSION} != ${ARG_TAG}")
+      message(FATAL_ERROR "Dependency ${DEPENDENCY_ID} version mismatched\n\t${${DEPENDENCY_ID}_VERSION} != ${ARG_TAG}")
     endif()
   else()
+    message(STATUS "Configuring ${DEPENDENCY_ID}")
+
     # Define the version
     set(${DEPENDENCY_ID}_VERSION ${ARG_TAG})
 
@@ -37,7 +37,6 @@ macro(add_dependency)
     # Handle python executable if it exists
     if(NOT DEFINED ${DEPENDENCY_ID}_EXECUTABLE)
       if(EXISTS "${${DEPENDENCY_ID}_SOURCE_DIR}/pyproject.toml")
-        message(STATUS "Configuring ${DEPENDENCY_ID}")
         execute_process(COMMAND ${Python3_EXECUTABLE} -m pip install -e ${${DEPENDENCY_ID}_SOURCE_DIR} OUTPUT_QUIET RESULT_VARIABLE rv)
         if("${rv}" STREQUAL "0")
           set(${DEPENDENCY_ID}_EXECUTABLE ${VENV_DIR}/bin/${ARG_BINARY} CACHE STRING "path to the ${DEPENDENCY_ID} executable")
