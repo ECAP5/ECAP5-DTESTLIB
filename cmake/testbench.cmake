@@ -40,13 +40,17 @@ function(get_all_sources_recursive TARGET_NAME OUTPUT_LIST)
     endforeach()
   endif()
 
+  if(CURRENT_FILES)
+    list(REMOVE_DUPLICATES CURRENT_FILES)
+  endif()
+
   set(${OUTPUT_LIST} ${CURRENT_FILES} PARENT_SCOPE)
 endfunction()
 
 macro(add_testbench)
   cmake_parse_arguments(ARG ""
                             "MODULE;BENCH_DIR;BENCH;TESTDATA_DIR"
-                            "LIBS;CUSTOM_DEPENDS"
+                            "LIBS;CUSTOM_DEPENDS;TEST_INCLUDE_DIRS"
                             ${ARGN})
   if(NOT ARG_BENCH_DIR)
     message(FATAL_ERROR "Need a bench directory")
@@ -87,7 +91,7 @@ macro(add_testbench)
 
   # Create the test executable
   add_executable(${TARGET} ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.cpp)
-  target_include_directories(${TARGET} PUBLIC ${TEST_INCLUDE_DIR})
+  target_include_directories(${TARGET} PUBLIC ${ARG_TEST_INCLUDE_DIRS})
   verilate(${TARGET}
     PREFIX     V${TARGET}
     TOP_MODULE ${TARGET}

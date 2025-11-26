@@ -9,8 +9,11 @@ macro(add_dependency)
   string(MAKE_C_IDENTIFIER "${ARG_GIT}" DEPENDENCY_ID)
   string(TOLOWER "${DEPENDENCY_ID}" DEPENDENCY_ID)
 
+  get_property(IS_DEPENDENCY_PRESENT GLOBAL PROPERTY ${DEPENDENCY_ID}_VERSION SET)
+
   # Check if the dependency is already present
-  if(DEFINED ${DEPENDENCY_ID}_VERSION)
+  if(${IS_DEPENDENCY_PRESENT})
+    get_property(${DEPENDENCY_ID}_VERSION GLOBAL PROPERTY ${DEPENDENCY_ID}_VERSION)
     # Check that the version is the same
     if(NOT ${DEPENDENCY_ID}_VERSION STREQUAL ARG_TAG)
       message(FATAL_ERROR "Dependency ${DEPENDENCY_ID} version mismatched\n\t${${DEPENDENCY_ID}_VERSION} != ${ARG_TAG}")
@@ -19,7 +22,7 @@ macro(add_dependency)
     message(STATUS "Configuring ${DEPENDENCY_ID}")
 
     # Define the version
-    set(${DEPENDENCY_ID}_VERSION ${ARG_TAG})
+    set_property(GLOBAL PROPERTY ${DEPENDENCY_ID}_VERSION ${ARG_TAG})
 
     # Fetch the repository
     FetchContent_Declare(${DEPENDENCY_ID}
@@ -31,7 +34,7 @@ macro(add_dependency)
 
     # Add cmake build if it exists
     if(EXISTS "${${DEPENDENCY_ID}_SOURCE_DIR}/CMakeLists.txt")
-      add_subdirectory(${${DEPENDENCY_ID}_SOURCE_DIR} ${${DEPENDENCY_ID}_SOURCE_DIR}../${DEPENDENCY_ID}-build)
+      add_subdirectory(${${DEPENDENCY_ID}_SOURCE_DIR} ${${DEPENDENCY_ID}_SOURCE_DIR}/../${DEPENDENCY_ID}-build)
     endif()
 
     # Handle python executable if it exists

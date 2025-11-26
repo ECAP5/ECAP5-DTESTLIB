@@ -22,27 +22,23 @@
 # Bench parent directory
 set(BENCH_DIR ${CMAKE_CURRENT_SOURCE_DIR}/benches/)
 # C++ bench include directory
-set(TEST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/)
-# HDL source directories
-set(SRC_DIRS ${CMAKE_SOURCE_DIR}/src/)
-# HDL library directories
-set(LIBS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/)
+set(TEST_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/include/)
 # Bench CSV output directory
-set(TESTDATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/testdata/)
+set(TESTDATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/)
 
 # Lint
 add_lint_target(
   TARGET lint
-  SRC_DIRS ${SRC_DIRS}
+  LIB    ecap5_dtestlib
 )
 
 # Add testbenches
 add_testbench(
-  MODULE       instr_wb_slave
-  BENCH_DIR    ${BENCH_DIR}
-  LIBS_DIR     ${LIBS_DIR}
-  TESTDATA_DIR ${TESTDATA_DIR}
-  SRC_DIRS     ${SRC_DIRS} 
+  MODULE            instr_wb_slave
+  LIBS              ecap5_dtestlib
+  BENCH_DIR         ${BENCH_DIR}
+  TESTDATA_DIR      ${TESTDATA_DIR}
+  TEST_INCLUDE_DIRS ${TEST_INCLUDE_DIRS}
 )
 
 # Main targets
