@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with ECAP5-DTESTLIB.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.21)
 include(FetchContent)
 
 project(ECAP5_DTESTLIB VERSION 1.0.0)
@@ -44,29 +44,38 @@ find_package(Python3 COMPONENTS Interpreter Development)
 message(STATUS "Collecting dependencies")
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/dependency.cmake)
 
-add_dependency(ECAP5_TREQ 
-  GIT ecap5/ecap5-treq
-  TAG tags/v2.2.0
-  BINARY ecap5-treq)
-
-add_dependency(sphinx-cmake
+add_dependency(
   GIT ecap5/sphinx-cmake
   TAG tags/v1.0.1)
 
-add_dependency(verilator-cmake
+add_dependency(
   GIT ecap5/verilator-cmake
   TAG tags/v1.0.1)
 
-# Configure dependencies
+add_dependency(
+  GIT ecap5/ecap5-treq
+  TAG 109-use-cmake-interface-libraries
+  BINARY ecap5-treq)
 
-include(${verilator_cmake_SOURCE_DIR}/cmake/verilator-config.cmake)
-include(${ecap5_treq_SOURCE_DIR}/config.cmake)
-list(APPEND CMAKE_MODULE_PATH "${sphinx_cmake_SOURCE_DIR}/cmake")
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/lint.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/cmake/testbench.cmake)
+# Define an interface library
 
-# Include subdirectories
+add_library(ecap5_dtestlib INTERFACE)
+target_sources(ecap5_dtestlib INTERFACE
+  ${CMAKE_CURRENT_LIST_DIR}/src/instr_wb_slave.sv
+)
 
-add_subdirectory(docs)
-add_subdirectory(tests)
+# Only perform if the project will be tested
+if(PROJECT_IS_TOP_LEVEL)
+  # Configure dependencies
+  list(APPEND CMAKE_MODULE_PATH "${ecap5_sphinx_cmake_SOURCE_DIR}/cmake")
+  include(${ecap5_verilator_cmake_SOURCE_DIR}/cmake/verilator-config.cmake)
+  include(${ecap5_ecap5_treq_SOURCE_DIR}/config.cmake)
 
+  # Include local cmake configuration files
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/lint.cmake)
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/testbench.cmake)
+
+  # Include subdirectories
+  add_subdirectory(docs)
+  add_subdirectory(tests)
+endif()
