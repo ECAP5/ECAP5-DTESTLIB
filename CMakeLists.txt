@@ -28,7 +28,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 # Create python virtual env
-message(STATUS "Creating python venv")
 set(VENV_DIR ${CMAKE_BINARY_DIR}/venv)
 if(NOT EXISTS "${VENV_DIR}")
   find_package(Python3 COMPONENTS Interpreter)
@@ -41,7 +40,6 @@ find_package(Python3 COMPONENTS Interpreter Development)
 
 # Dependencies
 
-message(STATUS "Collecting dependencies")
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/dependency.cmake)
 
 add_dependency(
@@ -65,17 +63,21 @@ target_sources(ecap5_dtestlib INTERFACE
 )
 
 # Only perform if the project will be tested
+
 if(PROJECT_IS_TOP_LEVEL)
   # Configure dependencies
+
   list(APPEND CMAKE_MODULE_PATH "${ecap5_sphinx_cmake_SOURCE_DIR}/cmake")
   include(${ecap5_verilator_cmake_SOURCE_DIR}/cmake/verilator-config.cmake)
   include(${ecap5_ecap5_treq_SOURCE_DIR}/config.cmake)
 
   # Include local cmake configuration files
+
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/lint.cmake)
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/testbench.cmake)
 
   # Include subdirectories
+
   add_subdirectory(docs)
   add_subdirectory(tests)
 endif()
