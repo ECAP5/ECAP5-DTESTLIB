@@ -24,15 +24,19 @@ set(DEFAULT_WAIVE_FILE ${CMAKE_CURRENT_LIST_DIR}/../config/default-verible-lint.
 
 function(add_lint_target)
   cmake_parse_arguments(ARG ""
-                            "TARGET;CUSTOM_RULE_FILE;CUSTOM_WAIVE_FILE"
-                            "SRC_DIRS"
+                            "LIB;TARGET;CUSTOM_RULE_FILE;CUSTOM_WAIVE_FILE"
+                            ""
                             ${ARGN})
   if (NOT ARG_TARGET)
     message(FATAL_ERROR "Need a target name")
   endif()
 
-  if (NOT ARG_SRC_DIRS)
-    message(FATAL_ERROR "Need a source directory")
+  if (NOT ARG_LIB)
+    message(FATAL_ERROR "Need an interface library")
+  endif()
+
+  if (NOT TARGET ${ARG_LIB})
+    message(FATAL_ERROR "Library ${ARG_LIB} not defined")
   endif()
 
   if (NOT CUSTOM_RULE_FILE)
@@ -43,9 +47,9 @@ function(add_lint_target)
     set(CUSTOM_WAIVE_FILE ${DEFAULT_WAIVE_FILE})
   endif()
 
-  file(GLOB SRC_FILES ${ARG_SRC_DIRS}/*.sv)
   add_custom_target(${ARG_TARGET}
-    COMMAND verible-verilog-lint ${SRC_FILES} --rules_config="${CUSTOM_RULE_FILE}" --waiver_files="${CUSTOM_WAIVE_FILE}"
-    DEPENDS ${SRC_FILES} ${CUSTOM_RULE_FILE} ${CUSTOM_WAIVE_FILE})
+    COMMAND verible-verilog-lint $<TARGET_PROPERTY:${ARG_LIB},INTERFACE_SOURCES> --rules_config="${CUSTOM_RULE_FILE}" --waiver_files="${CUSTOM_WAIVE_FILE}"
+    DEPENDS ${SRC_FILES} ${CUSTOM_RULE_FILE} ${CUSTOM_WAIVE_FILE}
+    COMMAND_EXPAND_LISTS)
 endfunction()
 
