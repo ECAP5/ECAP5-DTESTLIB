@@ -16,13 +16,20 @@ macro(add_dependency)
     get_property(${DEPENDENCY_ID}_VERSION GLOBAL PROPERTY ${DEPENDENCY_ID}_VERSION)
     # Check that the version is the same
     if(NOT ${DEPENDENCY_ID}_VERSION STREQUAL ARG_TAG)
-      message(FATAL_ERROR "Dependency ${DEPENDENCY_ID} version mismatched\n\t${${DEPENDENCY_ID}_VERSION} != ${ARG_TAG}")
+      message(FATAL_ERROR "Dependency ${ARG_GIT} version mismatched\n\t${${DEPENDENCY_ID}_VERSION} != ${ARG_TAG}")
     endif()
   else()
-    message(STATUS "Configuring ${DEPENDENCY_ID}")
+    message(STATUS "Configuring ${ARG_GIT}")
 
     # Define the version
     set_property(GLOBAL PROPERTY ${DEPENDENCY_ID}_VERSION ${ARG_TAG})
+
+    # Check if released version
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+      if(NOT ${ARG_TAG} MATCHES "^tags/.*")
+        message(WARNING "Using ${ARG_GIT} with unreleased version ${ARG_TAG}")
+      endif()
+    endif()
 
     # Fetch the repository
     FetchContent_Declare(${DEPENDENCY_ID}
