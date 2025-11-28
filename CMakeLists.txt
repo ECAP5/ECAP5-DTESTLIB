@@ -52,7 +52,7 @@ add_dependency(
 
 add_dependency(
   GIT ecap5/ecap5-treq
-  TAG 109-use-cmake-interface-libraries
+  TAG release/v3.0.0
   BINARY ecap5-treq)
 
 # Define an interface library
