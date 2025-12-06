@@ -47,8 +47,14 @@ function(add_lint_target)
     set(CUSTOM_WAIVE_FILE ${DEFAULT_WAIVE_FILE})
   endif()
 
+  # Get the sources
+  get_target_property(RAW_SOURCES ${ARG_LIB} INTERFACE_SOURCES)
+  if(RAW_SOURCES AND NOT "${RAW_SOURCES}" MATCHES "NOTFOUND")
+    set(LINT_SOURCES ${RAW_SOURCES})
+  endif()
+
   add_custom_target(${ARG_TARGET}
-    COMMAND verible-verilog-lint $<TARGET_PROPERTY:${ARG_LIB},INTERFACE_SOURCES> --rules_config="${CUSTOM_RULE_FILE}" --waiver_files="${CUSTOM_WAIVE_FILE}"
+    COMMAND verible-verilog-lint ${LINT_SOURCES} --rules_config="${CUSTOM_RULE_FILE}" --waiver_files="${CUSTOM_WAIVE_FILE}"
     DEPENDS ${SRC_FILES} ${CUSTOM_RULE_FILE} ${CUSTOM_WAIVE_FILE}
     COMMAND_EXPAND_LISTS)
 endfunction()
