@@ -50,7 +50,7 @@ endfunction()
 macro(add_testbench)
   cmake_parse_arguments(ARG ""
                             "MODULE;BENCH_DIR;BENCH;TESTDATA_DIR"
-                            "LIBS;CUSTOM_DEPENDS;TEST_INCLUDE_DIRS"
+			                      "LIBS;DEPENDS;TEST_INCLUDE_DIRS;DEFINES"
                             ${ARGN})
   if(NOT ARG_BENCH_DIR)
     message(FATAL_ERROR "Need a bench directory")
@@ -91,13 +91,17 @@ macro(add_testbench)
 
   # Create the test executable
   add_executable(${TARGET} ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.cpp)
+  if(ARG_DEPENDS)
+    add_dependencies(${TARGET} ${ARG_DEPENDS})
+  endif()
   target_include_directories(${TARGET} PUBLIC ${ARG_TEST_INCLUDE_DIRS})
   verilate(${TARGET}
     PREFIX     V${TARGET}
     TOP_MODULE ${TARGET}
     SOURCES    ${${TARGET}_SOURCES}
                ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.sv
-    TRACE)
+    TRACE
+    DEFINES ${ARG_DEFINES})
 
   set(TEST_TARGET simulate_${ARG_BENCH})
   set(TEST_OUTPUT ${ARG_TESTDATA_DIR}/${ARG_BENCH}.csv)
