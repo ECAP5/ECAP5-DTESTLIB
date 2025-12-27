@@ -20,6 +20,8 @@
  * along with ECAP5-DTESTLIB.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <cstdlib>
+
 #ifndef TESTBENCH_H
 #define TESTBENCH_H
 
@@ -50,6 +52,7 @@ public:
   int * err_cycles;
   int cycle;
 
+  uint8_t * clk_ptr;
   uint64_t clk_period_in_ps;
 
   Testbench() {
@@ -63,6 +66,13 @@ public:
     this->conditions = NULL;
     this->err_cycles = NULL;
     this->cycle = 0;
+
+    // Only configure the clk pointer if clk_i exists
+    if constexpr(requires {this->core->clk_i;}) {
+      this->clk_ptr = &this->core->clk_i;
+    } else {
+      this->clk_ptr = NULL;
+    }
   }
 
   ~Testbench() {
@@ -106,13 +116,18 @@ public:
   }
 
   void tick() {
-    core->clk_i = 1;
+    if(this->clk_ptr == NULL) {
+      printf("ERROR: clk_i not found. If the clk signal is named differently, define clk_ptr\n");
+      std::exit(-1);
+    }
+
+    *this->clk_ptr = 1;
     core->eval();
     if(this->trace) {
       this->trace->dump(this->clk_period_in_ps * this->tickcount + (this->clk_period_in_ps / 10));
     }
 
-    core->clk_i = 0;
+    *this->clk_ptr = 0;
     core->eval();
     if(this->trace) {
       this->trace->dump(this->clk_period_in_ps * this->tickcount + (this->clk_period_in_ps / 2));
@@ -122,7 +137,7 @@ public:
     this->tickcount += 1;
     this->cycle += 1;
 
-    core->clk_i = 1;
+    *this->clk_ptr = 1;
     core->eval();
     if(this->trace) {
       this->trace->dump(this->clk_period_in_ps * this->tickcount);
