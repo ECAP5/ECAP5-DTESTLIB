@@ -89,6 +89,9 @@ macro(add_testbench)
 
   get_all_sources_recursive(lib${TARGET} ${TARGET}_SOURCES)
 
+  set(CMAKE_CXX_STANDARD 20)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
   # Create the test executable
   add_executable(${TARGET} ${ARG_BENCH_DIR}/${ARG_MODULE}/${TARGET}.cpp)
   if(ARG_DEPENDS)
